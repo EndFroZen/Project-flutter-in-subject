@@ -1,16 +1,28 @@
 # Command github 
 - **No** .git in file
-git init
-git add .
-git commit -m "text someting"
-git branch -M main
-git remote add origin https://github.com/EndFroZen/Project-flutter-in-subject.git
-git push -u origin main
+  
+      git init
+
+      git add .
+
+      git commit -m "text someting"
+
+      git branch -M main
+
+      git remote add origin https://github.com/EndFroZen/Project-flutter-in-subject.git
+
+      git push -u origin main
+
 - **Have** .git in file
-git add .
-git commit -m "text someting"
-git branch -M main
-git branch -M main
+  
+      git add .
+
+      git commit -m "text someting"
+
+      git branch -M main
+
+      git push -u origin main
+
 
 
 
