@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:project/components/home/maintrade.dart';
+import 'package:project/components/wrapper/page/maintrade.dart';
 import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
@@ -287,7 +287,7 @@ class _LoginState extends State<Login> {
               onPressed: () async {
                 bool success = await signin(_email.text, _password.text);
                 if (success) {
-                  Navigator.pushNamed(context, "/maintrade");
+                  Navigator.pushNamed(context, "/mainwrapper");
                 } else {
                   toggleSignIn;
                 }
