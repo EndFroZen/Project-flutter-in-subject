@@ -71,21 +71,44 @@ func ShowItem() ([]ItemInfo, error) {
 	var item []ItemInfo
 	if err := DB.Table("item_infos").Find(&item).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil 
+			return nil, nil
 		}
 		return nil, err
 	}
-	return item ,nil
+	return item, nil
 }
 func ShowAItem(iditem string) ([]ItemInfo, error) {
 	var item []ItemInfo
-	if err := DB.Table("item_infos").Where("id = ?",iditem).Find(&item).Error; err != nil {
+	if err := DB.Table("item_infos").Where("id = ?", iditem).Find(&item).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil 
+			return nil, nil
 		}
 		return nil, err
 	}
-	return item ,nil
+	return item, nil
 }
 
+// func insert(){
+// 	items := []ItemInfo{
 
+// 		{
+// 			NameItem:        "วาซาบิ",
+// 			DescriptionItem: "เอากรรไกลตัดเล็บมาแลกได้นะเหลือเยอะมากกกก",
+// 			Image:           "wasabi.jpg",
+// 			Pathitem:        "/api/tradeitem/6",
+// 			UserID:          2, // Assuming user ID 1
+// 		},
+// 		{
+// 			NameItem:        "กุ้ง",
+// 			DescriptionItem: "เอากรรไกลตัดเล็บมาแลกได้นะเหลือเยอะมากกกก",
+// 			Image:           "shimp.jpg",
+// 			Pathitem:        "/api/tradeitem/7",
+// 			UserID:          1, // Assuming user ID 1
+// 		},
+// 	}
+// 	for _, item := range items {
+// 		if err := DB.Create(&item).Error; err != nil {
+// 			log.Fatalf("Error inserting item: %v", err)
+// 		}
+// 	}
+// }
