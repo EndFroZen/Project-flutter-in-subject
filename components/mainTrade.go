@@ -1,6 +1,11 @@
 package api
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"log"
+	"server/components/database"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 type ItemTrade struct {
 	Name string `json:"name"`
@@ -9,10 +14,18 @@ type ItemTrade struct {
 }
 
 func ShowItem(c *fiber.Ctx) error {
-	item := []ItemTrade{{Name: "วาซาบิ", Date: "10/10/2555", Img: "1.png"}}
-	item = append(item, ItemTrade{Name: "ไก่",Date: "11/10/2555",Img: "2.png"})
-	item = append(item, ItemTrade{Name: "ผ้าห่ม",Date: "12/10/2555",Img: "3.png"})
-	item = append(item, ItemTrade{Name: "ส้ม",Date: "11/10/2555",Img: "4.png"})
-	item = append(item, ItemTrade{Name: "กันดีด",Date: "5/10/2555",Img: "5.png"})
+	item,err := database.ShowItem()
+	if err != nil{
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid input: " + err.Error())
+	}
+	return c.JSON(item)
+}
+func Show_A_Item(c *fiber.Ctx) error {
+	iditem := c.Params("itemid")
+	log.Printf(iditem)
+	item,err := database.ShowAItem(iditem)
+	if err != nil{
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid input: " + err.Error())
+	}
 	return c.JSON(item)
 }
