@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:project/addon/maindrawer.dart';
 
+const host = "http://192.168.1.3:4050";
 var logger = Logger();
 
 class Maintrade extends StatelessWidget {
@@ -12,8 +13,7 @@ class Maintrade extends StatelessWidget {
 
   Future<List<dynamic>> fetchData() async {
     try {
-      final response = await http
-          .get(Uri.parse('https://arther.bxoks.online/api/itemtread'));
+      final response = await http.get(Uri.parse('$host/api/tredeitem'));
 
       if (response.statusCode == 200) {
         var decodedData = json.decode(utf8.decode(response.bodyBytes));
@@ -59,7 +59,7 @@ class Maintrade extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   final item = data[index];
-                  return itemBox(item);
+                  return itemBox(context, item);
                 },
               ),
             );
@@ -70,47 +70,54 @@ class Maintrade extends StatelessWidget {
   }
 }
 
-Widget itemBox(dynamic item) {
+Widget itemBox(context, dynamic item) {
+  final String name = item["NameItem"] ?? "Unknown Item";
+  final String createdAt = item["CreatedAt"] ?? "Unknown Date";
+  final String image = item["Image"] ?? "default_image.png";
+  final String pathitem = item["Pathitem"] ?? "Unknow path";
+  logger.i(image);
   return InkWell(
-    onTap: () {},
+    onTap: () {
+      Navigator.pushNamed(context, "/itemscreen", arguments: pathitem);
+    },
     child: Container(
       decoration: BoxDecoration(
-        color: Colors.white, // สีพื้นหลังของกล่อง
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1), // สีเงา
-            blurRadius: 8.0, // ความเบลอของเงา
-            offset: Offset(0, 4), // ทิศทางของเงา
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8.0,
+            offset: Offset(0, 4),
           ),
         ],
-        borderRadius: BorderRadius.circular(8.0), // มุมโค้งของกล่อง
+        borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            "https://arther.bxoks.online/api/image/" + item["img"],
+            "$host/api/image/$image",
             width: double.infinity,
             fit: BoxFit.cover,
             height: 200,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(child: CircularProgressIndicator());
+            },
           ),
-          const SizedBox(
-            height: 5,
-          ),
+          const SizedBox(height: 5),
           Text(
-            item["name"],
+            name,
             style: TextStyle(fontSize: 20),
           ),
           Text(
-            item["date"],
+            createdAt,
             style: TextStyle(
               color: Colors.black.withOpacity(0.5),
             ),
           ),
-          const SizedBox(
-            height: 40,
-          ),
-          Text("2000km")
+          const SizedBox(height: 40),
+          Text("2000km"),
         ],
       ),
     ),
