@@ -18,7 +18,7 @@ class Account extends StatelessWidget {
             child: Center(
                 child: ClipOval(
               child: Image.network(
-                "https://th.bing.com/th/id/OIP.ejFEUdI_mZfSj_fi6rDhDQHaJQ?rs=1&pid=ImgDetMain",
+                "http://10.50.18.116:4050/api/image/shimp.jpg",
                 height: 100,
                 width: 100,
                 fit: BoxFit.cover,

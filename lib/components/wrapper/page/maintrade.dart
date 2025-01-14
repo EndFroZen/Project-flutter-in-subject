@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
-const host = "http://192.168.1.3:4050";
+const host = "http://10.50.18.116:4050";
 var logger = Logger();
 
 class Maintrade extends StatelessWidget {
@@ -15,7 +15,7 @@ class Maintrade extends StatelessWidget {
 
       if (response.statusCode == 200) {
         var decodedData = json.decode(utf8.decode(response.bodyBytes));
-        // logger.d(decodedData);
+        logger.d(decodedData);
         return decodedData;
       } else {
         throw Exception('Failed to load data: ${response.statusCode}');

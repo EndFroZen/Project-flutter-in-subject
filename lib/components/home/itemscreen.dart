@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-const host = "http://192.168.1.3:4050";
+const host = "http://10.50.18.116:4050";
 
 class Itemscreen extends StatelessWidget {
   const Itemscreen({super.key});
