@@ -30,9 +30,9 @@ class LinkPage extends StatelessWidget {
       initialRoute: "/login",
       routes: {
         // "/login": (context) => AllItem(),
-        "/login": (context) => Loginpage(),
+        "/login": (context) => const Loginpage(),
         "/alliten": (context) => const AllItem(),
-        "/additem": (context) => Additem(),
+        "/additem": (context) => const Additem(),
         "/user": (context) => const User(
               authToken: '',
             ),

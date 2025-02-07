@@ -15,10 +15,10 @@ class AllItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F4E1),
+    return const Scaffold(
+      backgroundColor: Color(0xFFF8F4E1),
       body: ItemListScreen(),
-      bottomNavigationBar: const BottomNavBar(currentIndex: 0),
+      bottomNavigationBar: BottomNavBar(currentIndex: 0),
     );
   }
 }
@@ -151,7 +151,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
           log.d("กดปุ่มเพิ่มไอเท็ม");
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Additem()),
+            MaterialPageRoute(builder: (context) => const Additem()),
           );
         },
         backgroundColor: const Color(0xFF543310),

@@ -80,7 +80,7 @@ class Loginpage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AuthScreen(),
       // routes: {"/allitem": (context) => AllItem()},

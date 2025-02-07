@@ -4,14 +4,14 @@ import 'dart:io';
 
 import 'package:main/allitem.dart';
 
-void main() => runApp(Additem());
+void main() => runApp(const Additem());
 
 class Additem extends StatelessWidget {
   const Additem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: AddItemScreen(),
     );
   }

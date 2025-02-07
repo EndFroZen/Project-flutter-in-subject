@@ -83,9 +83,9 @@ class Loginpage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthScreen(),
+      home: const AuthScreen(),
       routes: {
-        '/login': (context) => Loginpage(),
+        '/login': (context) => const Loginpage(),
         '/allitem': (context) => const AllItem(), // Define your AllItem screen here
       },
     );
