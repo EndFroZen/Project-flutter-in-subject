@@ -7,6 +7,8 @@ import 'package:main/allitem.dart';
 void main() => runApp(Additem());
 
 class Additem extends StatelessWidget {
+  const Additem({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,6 +18,8 @@ class Additem extends StatelessWidget {
 }
 
 class AddItemScreen extends StatefulWidget {
+  const AddItemScreen({super.key});
+
   @override
   _AddItemScreenState createState() => _AddItemScreenState();
 }
@@ -39,21 +43,21 @@ class _AddItemScreenState extends State<AddItemScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF543310),
-        title: Text('เพิ่มไอเท็ม', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF543310),
+        title: const Text('เพิ่มไอเท็ม', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.white),
+          icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AllItem()),
+              MaterialPageRoute(builder: (context) => const AllItem()),
             );
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.check, color: Colors.white),
+            icon: const Icon(Icons.check, color: Colors.white),
             onPressed: () {
               // ฟังก์ชันสำหรับปุ่มยืนยัน
             },
@@ -61,7 +65,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
         ],
       ),
       body: Container(
-        color: Color(0xFFF8F4E1),
+        color: const Color(0xFFF8F4E1),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -87,11 +91,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
                             height: 150,
                           ),
                         )
-                      : Icon(Icons.camera_alt, size: 50, color: Colors.grey),
+                      : const Icon(Icons.camera_alt, size: 50, color: Colors.grey),
                 ),
               ),
-              SizedBox(height: 40),
-              TextField(
+              const SizedBox(height: 40),
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'ชื่อไอเท็ม',
                   border: OutlineInputBorder(),
@@ -99,8 +103,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 ),
               ),
-              SizedBox(height: 16),
-              TextField(
+              const SizedBox(height: 16),
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'รายละเอียด',
                   border: OutlineInputBorder(),
@@ -108,8 +112,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 ),
               ),
-              SizedBox(height: 16),
-              TextField(
+              const SizedBox(height: 16),
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'หมวดหมู่',
                   border: OutlineInputBorder(),
@@ -117,8 +121,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 ),
               ),
-              SizedBox(height: 16),
-              TextField(
+              const SizedBox(height: 16),
+              const TextField(
                 decoration: InputDecoration(
                   labelText: 'สภาพ',
                   border: OutlineInputBorder(),

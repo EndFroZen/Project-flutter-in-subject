@@ -16,9 +16,9 @@ class AllItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF8F4E1),
+      backgroundColor: const Color(0xFFF8F4E1),
       body: ItemListScreen(),
-      bottomNavigationBar: BottomNavBar(currentIndex: 0),
+      bottomNavigationBar: const BottomNavBar(currentIndex: 0),
     );
   }
 }
@@ -53,6 +53,8 @@ class Item {
 }
 
 class ItemListScreen extends StatefulWidget {
+  const ItemListScreen({super.key});
+
   @override
   _ItemListScreenState createState() => _ItemListScreenState();
 }
@@ -93,30 +95,30 @@ class _ItemListScreenState extends State<ItemListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF8F4E1),
+      backgroundColor: const Color(0xFFF8F4E1),
       appBar: AppBar(
-        title: Text('Item List', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF543310),
+        title: const Text('Item List', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF543310),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: DottedBorder(
           color: Colors.black,
           strokeWidth: 3,
-          dashPattern: [10, 5],
+          dashPattern: const [10, 5],
           borderType: BorderType.RRect,
-          radius: Radius.circular(15),
-          padding: EdgeInsets.all(10),
+          radius: const Radius.circular(15),
+          padding: const EdgeInsets.all(10),
           child: FutureBuilder<List<Item>>(
             future: items,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (snapshot.hasData) {
                 return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 8.0,
                     mainAxisSpacing: 8.0,
@@ -138,7 +140,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
                   },
                 );
               } else {
-                return Center(child: Text('No items found.'));
+                return const Center(child: Text('No items found.'));
               }
             },
           ),
@@ -152,11 +154,11 @@ class _ItemListScreenState extends State<ItemListScreen> {
             MaterialPageRoute(builder: (context) => Additem()),
           );
         },
-        backgroundColor: Color(0xFF543310),
+        backgroundColor: const Color(0xFF543310),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
-        child: Icon(Icons.add, size: 38, color: Colors.white),
+        child: const Icon(Icons.add, size: 38, color: Colors.white),
       ),
     );
   }
@@ -165,7 +167,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
 class ItemCard extends StatelessWidget {
   final Item item;
 
-  const ItemCard({Key? key, required this.item}) : super(key: key);
+  const ItemCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +178,7 @@ class ItemCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
-            offset: Offset(2, 2),
+            offset: const Offset(2, 2),
             blurRadius: 5,
           ),
         ],
@@ -186,13 +188,13 @@ class ItemCard extends StatelessWidget {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
               child: Image.network(
                 'http://26.65.220.249:3023/api/image${item.imagePath}',
                 fit: BoxFit.cover,
                 width: double.infinity,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(Icons.broken_image, size: 50);
+                  return const Icon(Icons.broken_image, size: 50);
                 },
               ),
             ),
@@ -202,9 +204,9 @@ class ItemCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.name, style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('by ${item.account}', style: TextStyle(fontSize: 12)),
-                Text('${item.location}', style: TextStyle(fontSize: 12)),
+                Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('by ${item.account}', style: const TextStyle(fontSize: 12)),
+                Text(item.location, style: const TextStyle(fontSize: 12)),
               ],
             ),
           ),
@@ -217,15 +219,15 @@ class ItemCard extends StatelessWidget {
 class ItemDetailScreen extends StatelessWidget {
   final Item item;
 
-  const ItemDetailScreen({Key? key, required this.item}) : super(key: key);
+  const ItemDetailScreen({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF8F4E1),
+      backgroundColor: const Color(0xFFF8F4E1),
       appBar: AppBar(
-        title: Text(item.name, style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF543310),
+        title: Text(item.name, style: const TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF543310),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -241,37 +243,37 @@ class ItemDetailScreen extends StatelessWidget {
                   width: double.infinity,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(Icons.broken_image, size: 100);
+                    return const Icon(Icons.broken_image, size: 100);
                   },
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(item.name,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
+                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
             Text('By: ${item.account}',
-                style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
-            SizedBox(height: 10),
+                style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
+            const SizedBox(height: 10),
             Text(
-              '${item.description}',
-              style: TextStyle(fontSize: 18),
+              item.description,
+              style: const TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 10),
-            Text('Location: ${item.location}', style: TextStyle(fontSize: 18)),
-            SizedBox(height: 100),
+            const SizedBox(height: 10),
+            Text('Location: ${item.location}', style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 100),
             Center(
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF543310),
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+                  backgroundColor: const Color(0xFF543310),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child:
-                    Icon(Icons.compare_arrows, color: Colors.white, size: 60),
+                    const Icon(Icons.compare_arrows, color: Colors.white, size: 60),
               ),
             )
           ],

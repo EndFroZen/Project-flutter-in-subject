@@ -12,7 +12,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
-      child: LinkPage(),
+      child: const LinkPage(),
     ),
   );
 }
@@ -31,9 +31,11 @@ class LinkPage extends StatelessWidget {
       routes: {
         // "/login": (context) => AllItem(),
         "/login": (context) => Loginpage(),
-        "/alliten": (context) => AllItem(),
+        "/alliten": (context) => const AllItem(),
         "/additem": (context) => Additem(),
-        // "/profile": (context) => UserProfileScreen(),
+        "/user": (context) => const User(
+              authToken: '',
+            ),
       },
     );
   }

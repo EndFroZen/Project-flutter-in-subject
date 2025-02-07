@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:main/widgets/bottom_nav_bar.dart';
 
-class UserProfileScreen extends StatefulWidget {
-  final String authToken; // รับ token จากที่อื่น (เช่นจาก login screen)
+class User extends StatefulWidget {
+  final String authToken;
 
-  const UserProfileScreen({Key? key, required this.authToken})
-      : super(key: key);
+  const User({super.key, required this.authToken});
 
   @override
-  _UserProfileScreenState createState() => _UserProfileScreenState();
+  _UserState createState() => _UserState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+class _UserState extends State<User> {
+  String name = "Loading...";
+  String phone = "Loading...";
+  String email = "Loading...";
   String? profileImage;
 
   @override
@@ -39,9 +39,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
-        nameController.text = data['name'];
-        phoneController.text = data['phone'];
-        emailController.text = data['email'];
+        name = data['name'] ?? "No Name";
+        phone = data['phone'] ?? "No Phone";
+        email = data['email'] ?? "No Email";
         profileImage = data['profile_image'];
       });
     } else {
@@ -49,76 +49,55 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-  Future<void> _updateProfile() async {
-    if (widget.authToken.isEmpty) return;
-
-    final url = Uri.parse('http://endforzen/update-profile');
-    final response = await http.put(
-      url,
-      headers: {
-        'Authorization': 'Bearer ${widget.authToken}',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'name': nameController.text,
-        'phone': phoneController.text,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      print("Profile updated successfully");
-    } else {
-      print("Failed to update profile: ${response.body}");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Profile"),
-        backgroundColor: Color(0xFF543310),
+        title: const Text("User Profile"),
+        backgroundColor: const Color(0xFF543310),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Profile Picture
             CircleAvatar(
               radius: 50,
               backgroundImage: profileImage != null
                   ? NetworkImage(profileImage!)
-                  : AssetImage("assets/default_profile.png") as ImageProvider,
+                  : const AssetImage("assets/default_profile.png") as ImageProvider,
             ),
-            SizedBox(height: 10),
-            Text("User Profile", style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 20),
-            // Name
-            TextField(
-              controller: nameController,
-              decoration: InputDecoration(labelText: 'Name'),
-            ),
-            SizedBox(height: 10),
-            // Phone
-            TextField(
-              controller: phoneController,
-              decoration: InputDecoration(labelText: 'Phone Number'),
-            ),
-            SizedBox(height: 10),
-            // Email (Read Only)
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-              readOnly: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _updateProfile,
-              child: Text("Update Profile"),
+            const SizedBox(height: 10),
+            const Text("User Profile",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const SizedBox(height: 20),
+            Card(
+              elevation: 2,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.person),
+                    title: const Text("Name"),
+                    subtitle: Text(name),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.phone),
+                    title: const Text("Phone Number"),
+                    subtitle: Text(phone),
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.email),
+                    title: const Text("Email"),
+                    subtitle: Text(email),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
+      bottomNavigationBar: const BottomNavBar(currentIndex: 2),
     );
   }
 }

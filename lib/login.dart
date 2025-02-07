@@ -68,15 +68,17 @@ Future<void> register(BuildContext context, String email, String name,
       Navigator.pushReplacementNamed(context, "/allitem");
     } else {
       print("Login failed: ${response.statusCode} - ${response.body}");
-      return null;
+      return;
     }
   } catch (e) {
     print("Error: $e");
-    return null;
+    return;
   }
 }
 
 class Loginpage extends StatelessWidget {
+  const Loginpage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -84,13 +86,15 @@ class Loginpage extends StatelessWidget {
       home: AuthScreen(),
       routes: {
         '/login': (context) => Loginpage(),
-        '/allitem': (context) => AllItem(), // Define your AllItem screen here
+        '/allitem': (context) => const AllItem(), // Define your AllItem screen here
       },
     );
   }
 }
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
+
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -106,17 +110,17 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF8F4E1),
+      backgroundColor: const Color(0xFFF8F4E1),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: DottedBorder(
           color: Colors.black,
           strokeWidth: 6,
-          dashPattern: [10, 4],
+          dashPattern: const [10, 4],
           borderType: BorderType.RRect,
-          radius: Radius.circular(12),
+          radius: const Radius.circular(12),
           child: DecoratedBox(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFFF8F4E1),
             ),
             child: Center(
@@ -124,7 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'TradeOn',
                     style: TextStyle(
                       fontSize: 32,
@@ -132,21 +136,21 @@ class _AuthScreenState extends State<AuthScreen> {
                       color: Color(0xFF543310),
                     ),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                          const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      side: BorderSide(color: Color(0xFF543310), width: 1),
+                      side: const BorderSide(color: Color(0xFF543310), width: 1),
                     ),
                     onPressed: () {
                       _showBottomSheet(context, isSignUp: false);
                     },
-                    child: Text(
+                    child: const Text(
                       'SIGN IN',
                       style: TextStyle(
                         color: Color(0xFF543310),
@@ -154,12 +158,12 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF543310),
+                      backgroundColor: const Color(0xFF543310),
                       padding:
-                          EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                          const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -167,7 +171,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     onPressed: () {
                       _showBottomSheet(context, isSignUp: true);
                     },
-                    child: Text(
+                    child: const Text(
                       'SIGN UP',
                       style: TextStyle(
                         color: Colors.white,
@@ -188,8 +192,8 @@ class _AuthScreenState extends State<AuthScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Color(0xFFAF8F6F),
-      shape: RoundedRectangleBorder(
+      backgroundColor: const Color(0xFFAF8F6F),
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
@@ -205,13 +209,13 @@ class _AuthScreenState extends State<AuthScreen> {
             children: [
               Text(
                 isSignUp ? 'Sign Up' : 'Sign In',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFFFFFFFF),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (isSignUp)
                 TextField(
                   controller: usernameController,
@@ -236,7 +240,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -249,7 +253,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 ),
               ),
-              if (isSignUp) SizedBox(height: 10),
+              if (isSignUp) const SizedBox(height: 10),
               if (isSignUp)
                 TextField(
                   controller: confirmpasswordController,
@@ -263,7 +267,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                 ),
-              if (isSignUp) SizedBox(height: 10),
+              if (isSignUp) const SizedBox(height: 10),
               if (isSignUp)
                 TextField(
                   controller: phoneController,
@@ -276,11 +280,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                 ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFF8F4E1),
-                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                  backgroundColor: const Color(0xFFF8F4E1),
+                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -297,7 +301,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       Navigator.pushNamed(context, "/login");
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text("Passwords do not match!"),
                           backgroundColor: Colors.red,
                         ),
@@ -318,7 +322,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 },
                 child: Text(
                   isSignUp ? 'SIGN UP' : 'SIGN IN',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF543310),
                     fontSize: 16,
                   ),

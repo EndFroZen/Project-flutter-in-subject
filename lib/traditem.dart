@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,6 +15,8 @@ class MyApp extends StatelessWidget {
 }
 
 class TradeScreen extends StatefulWidget {
+  const TradeScreen({super.key});
+
   @override
   _TradeScreenState createState() => _TradeScreenState();
 }
@@ -33,13 +37,13 @@ class _TradeScreenState extends State<TradeScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return Container(
           height: MediaQuery.of(context).size.height * 0.5,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
               Container(
@@ -50,10 +54,10 @@ class _TradeScreenState extends State<TradeScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Expanded(
                 child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
@@ -79,11 +83,11 @@ class _TradeScreenState extends State<TradeScreen> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             color: Colors.black.withOpacity(0.5),
                             child: Text(
                               item['name']!,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
@@ -103,18 +107,18 @@ class _TradeScreenState extends State<TradeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF543310),
+        backgroundColor: const Color(0xFF543310),
         leading: IconButton(
-          icon: Icon(Icons.close, size: 40, color: Colors.white),
+          icon: const Icon(Icons.close, size: 40, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Trade', style: TextStyle(color: Color(0xFFF8F4E1))),
+        title: const Text('Trade', style: TextStyle(color: Color(0xFFF8F4E1))),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.check, size: 40, color: Colors.white),
+            icon: const Icon(Icons.check, size: 40, color: Colors.white),
             onPressed: () {},
           ),
         ],
@@ -122,9 +126,9 @@ class _TradeScreenState extends State<TradeScreen> {
       body: Column(
         children: [
           Container(
-            color: Color(0xFF543310),
-            padding: EdgeInsets.symmetric(vertical: 16.0),
-            child: Row(
+            color: const Color(0xFF543310),
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: const Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
@@ -164,8 +168,8 @@ class _TradeScreenState extends State<TradeScreen> {
                     children: [
                       Column(
                         children: [
-                          Text('ไอเท็มที่แลก', style: TextStyle(fontSize: 16)),
-                          SizedBox(height: 8),
+                          const Text('ไอเท็มที่แลก', style: TextStyle(fontSize: 16)),
+                          const SizedBox(height: 8),
                           GestureDetector(
                             onTap: _showImageOverlay,
                             child: Container(
@@ -176,7 +180,7 @@ class _TradeScreenState extends State<TradeScreen> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: selectedImage == null
-                                  ? Center(
+                                  ? const Center(
                                       child: Icon(Icons.add,
                                           size: 40, color: Colors.grey),
                                     )
@@ -191,7 +195,7 @@ class _TradeScreenState extends State<TradeScreen> {
                           ),
                         ],
                       ),
-                      Column(
+                      const Column(
                         children: [
                           SizedBox(height: 72),
                           Icon(Icons.swap_horiz, size: 50, color: Colors.grey),
@@ -199,20 +203,20 @@ class _TradeScreenState extends State<TradeScreen> {
                       ),
                       Column(
                         children: [
-                          SizedBox(height: 32),
+                          const SizedBox(height: 32),
                           Container(
                             width: 140,
                             height: 140,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(4),
-                              image: DecorationImage(
+                              image: const DecorationImage(
                                 image: AssetImage('images/ball1.jpg'),
                                 fit: BoxFit.cover,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.2),
-                                  offset: Offset(0, 4),
+                                  offset: const Offset(0, 4),
                                   blurRadius: 6,
                                   spreadRadius: 2,
                                 ),
