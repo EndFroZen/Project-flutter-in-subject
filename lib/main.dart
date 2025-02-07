@@ -3,6 +3,7 @@ import 'package:main/AuthProvider.dart';
 import 'package:main/additem.dart';
 import 'package:main/allitem.dart';
 import 'package:main/login.dart';
+import 'package:main/user.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -28,9 +29,11 @@ class LinkPage extends StatelessWidget {
       ),
       initialRoute: "/login",
       routes: {
-        "/login": (context) => AllItem(),
+        // "/login": (context) => AllItem(),
+        "/login": (context) => Loginpage(),
         "/alliten": (context) => AllItem(),
         "/additem": (context) => Additem(),
+        // "/profile": (context) => UserProfileScreen(),
       },
     );
   }

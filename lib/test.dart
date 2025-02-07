@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:main/AuthProvider.dart';
-import 'package:provider/provider.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:http/http.dart' as http;
+import 'package:main/AuthProvider.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -11,23 +12,28 @@ TextEditingController usernameController = TextEditingController();
 TextEditingController phoneController = TextEditingController();
 
 Future<String?> login(
-    String email, String password, BuildContext context) async {
+    BuildContext context, String email, String password) async {
   final url = Uri.parse('http://26.65.220.249:3023/login');
 
   try {
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
     );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       String token = responseData['token'];
-
-      // Set the token using Provider
       Provider.of<AuthProvider>(context, listen: false).setToken(token);
 
+      // Navigate to the next screen
+      Navigator.pushReplacementNamed(context, "/allitem");
       return token;
     } else {
       print("Login failed: ${response.statusCode} - ${response.body}");
@@ -39,14 +45,16 @@ Future<String?> login(
   }
 }
 
-Future<String?> register(String email, String name, String password,
-    String phone, BuildContext context) async {
+Future<void> register(BuildContext context, String email, String name,
+    String password, String phone) async {
   final url = Uri.parse('http://26.65.220.249:3023/register');
 
   try {
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: jsonEncode({
         "phone": phone,
         "name": name,
@@ -56,15 +64,9 @@ Future<String?> register(String email, String name, String password,
     );
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      String token = responseData['token'];
-
-      // Set the token using Provider
-      Provider.of<AuthProvider>(context, listen: false).setToken(token);
-
-      return token;
+      Navigator.pushReplacementNamed(context, "/allitem");
     } else {
-      print("Register failed: ${response.statusCode} - ${response.body}");
+      print("Login failed: ${response.statusCode} - ${response.body}");
       return null;
     }
   } catch (e) {
@@ -73,40 +75,114 @@ Future<String?> register(String email, String name, String password,
   }
 }
 
-class AuthScreen extends StatelessWidget {
+class Loginpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: AuthScreen(),
+      // routes: {"/allitem": (context) => AllItem()},
+    );
+  }
+}
 
-    if (authProvider.token != null) {
-      // Navigate to the next screen if the token exists
-      Future.microtask(
-          () => Navigator.pushReplacementNamed(context, "/allitem"));
-      return Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
+class AuthScreen extends StatefulWidget {
+  @override
+  _AuthScreenState createState() => _AuthScreenState();
+}
 
+class _AuthScreenState extends State<AuthScreen> {
+  String? token;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // หากไม่มี token ให้แสดงหน้าจอ login/signup
     return Scaffold(
       backgroundColor: Color(0xFFF8F4E1),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => _showBottomSheet(context, isSignUp: false),
-              child: Text("SIGN IN"),
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: DottedBorder(
+          color: Colors.black,
+          strokeWidth: 6,
+          dashPattern: [10, 4],
+          borderType: BorderType.RRect,
+          radius: Radius.circular(12),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Color(0xFFF8F4E1),
             ),
-            ElevatedButton(
-              onPressed: () => _showBottomSheet(context, isSignUp: true),
-              child: Text("SIGN UP"),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'TradeOn',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF543310),
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      side: BorderSide(color: Color(0xFF543310), width: 1),
+                    ),
+                    onPressed: () {
+                      _showBottomSheet(context, isSignUp: false);
+                    },
+                    child: Text(
+                      'SIGN IN',
+                      style: TextStyle(
+                        color: Color(0xFF543310),
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF543310),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      _showBottomSheet(context, isSignUp: true);
+                    },
+                    child: Text(
+                      'SIGN UP',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   void _showBottomSheet(BuildContext context, {required bool isSignUp}) {
-    // Show bottom sheet for login/signup
+    // แสดงหน้าจอ BottomSheet สำหรับ Login หรือ SignUp
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -177,7 +253,7 @@ class AuthScreen extends StatelessWidget {
                   controller: confirmpasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
+                    labelText: 'confirm Password',
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -215,23 +291,24 @@ class AuthScreen extends StatelessWidget {
                     String password = passwordController.text;
                     String confirmpass = confirmpasswordController.text;
                     if (password == confirmpass) {
-                      await register(email, name, password, phone, context);
+                      await register(context, email, name, password, phone);
                       Navigator.pushNamed(context, "/login");
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Password mismatch!"),
+                          content: Text("รหัสผ่านไม่ตรงกัน!"),
                           backgroundColor: Colors.red,
                         ),
                       );
                     }
+                    Navigator.pushNamed(context, "/login");
                   } else {
                     String email = emailController.text;
                     String password = passwordController.text;
 
-                    String? token = await login(email, password, context);
+                    String? token = await login(context, email, password);
+                    Navigator.pushNamed(context, "/allitem");
                     if (token != null) {
-                      Navigator.pushNamed(context, "/allitem");
                       print("Login successful! Token: $token");
                     } else {
                       print("Login failed.");

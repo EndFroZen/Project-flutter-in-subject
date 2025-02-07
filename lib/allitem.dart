@@ -5,6 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:logger/logger.dart';
 import 'package:main/AuthProvider.dart';
 import 'package:main/additem.dart';
+import 'package:main/widgets/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 var log = Logger();
@@ -14,9 +15,10 @@ class AllItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ItemListScreen(),
-      debugShowCheckedModeBanner: false,
+    return Scaffold(
+      backgroundColor: Color(0xFFF8F4E1),
+      body: ItemListScreen(),
+      bottomNavigationBar: BottomNavBar(currentIndex: 0),
     );
   }
 }
