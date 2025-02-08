@@ -14,6 +14,7 @@ type ItemInfo struct {
 	gorm.Model
 	Name        string
 	Discription string
+	Location    string
 	Imagepath   string
 	UserInfoID  uint
 	UserInfo    UserInfo

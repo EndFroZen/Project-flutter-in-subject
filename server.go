@@ -2,16 +2,29 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"server/components/database"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 )
 
+func init() {
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
+
 func authendicationMethod(c *fiber.Ctx) error {
+
 	authHeader := c.Query("Auth")
-	secretKey := []byte("BytEaNdEF")
+	KEY := os.Getenv("KEY")
+	secretKey := []byte(KEY)
 	if authHeader == "" {
 		return c.Status(fiber.StatusUnauthorized).SendString("No token provided")
 	}
@@ -29,12 +42,17 @@ func authendicationMethod(c *fiber.Ctx) error {
 }
 
 func main() {
+
 	app := fiber.New()
 	DB := database.ConnectDatabase()
 	DB.AutoMigrate(&database.UserInfo{}, database.ItemInfo{}, database.TradeInfo{}, database.SendingAdding{})
 	app.Static("/image", "./image")
 	// log.Fatal(DB)
-
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",                          // อนุญาตให้ทุกโดเมนเข้าถึง (ระวังเรื่องความปลอดภัย)
+		AllowMethods: "GET,POST,PUT,DELETE",        // อนุญาตเฉพาะเมธอดที่ต้องการ
+		AllowHeaders: "Content-Type,Authorization", // อนุญาตให้ส่ง headers พิเศษ เช่น Authorization
+	}))
 	// app use-------------------------------------------------------------------------------------
 	app.Use("/postitem", authendicationMethod)
 	app.Use("/api/allitem", authendicationMethod)
@@ -67,11 +85,15 @@ func main() {
 	app.Post("/login", func(c *fiber.Ctx) error {
 		user := new(database.UserInfo)
 		if err := c.BodyParser(&user); err != nil {
-			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+			return c.JSON(fiber.Map{
+				"token": nil,
+			})
 		}
 		token, err := database.Login(DB, user)
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+			return c.JSON(fiber.Map{
+				"token": nil,
+			})
 		}
 		return c.JSON(fiber.Map{
 			"token": token,
@@ -192,12 +214,20 @@ func main() {
 				"detail": err.Error(),
 			})
 		}
+		base64file := req["file"]
+		name := req["name"]
+		location := req["location"]
+		discription := req["description"]
+		fmt.Println(name)
+		fmt.Println(location)
+		fmt.Println(discription)
 
-		base64file := req["file"].(string)
-		imagepath := database.Savefileimage(base64file, int(userData.ID))
+		imagepath := database.Savefileimage(base64file.(string), int(userData.ID))
+		
 		itemJson := &database.ItemInfo{
-			Name:        req["name"].(string),
-			Discription: req["description"].(string),
+			Name:        name.(string),
+			Discription: discription.(string),
+			Location:    location.(string),
 			Imagepath:   imagepath,
 			UserInfoID:  userData.ID,
 		}
@@ -313,8 +343,8 @@ func main() {
 
 	//port------------------------------------------------------------------------------------------
 
-	// app.Listen("0.0.0.0:3023")
-	app.Listen("127.0.0.1:4050")
+	app.Listen("0.0.0.0:3023")
+	// app.Listen("127.0.0.1:4050")
 	// app.Listen("0.0.0.0:4050")
 
 	//port------------------------------------------------------------------------------------------

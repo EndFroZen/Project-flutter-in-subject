@@ -1,6 +1,7 @@
 package database
 
 import (
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -13,6 +14,7 @@ type UserInfo struct {
 	Name     string
 	Email    string `gorm:unique`
 	Password string
+	Phone    string
 }
 
 func Register(db *gorm.DB, user *UserInfo) error {
@@ -30,7 +32,7 @@ func Register(db *gorm.DB, user *UserInfo) error {
 
 func Login(db *gorm.DB, user *UserInfo) (string, error) {
 	Auser := new(UserInfo)
-
+	KEY := os.Getenv("KEY")
 	result := db.Where("email = ?", user.Email).First(Auser)
 	if result.Error != nil {
 		return "", result.Error
@@ -39,7 +41,7 @@ func Login(db *gorm.DB, user *UserInfo) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	secretKey := []byte("BytEaNdEF")
+	secretKey := []byte(KEY)
 	claims := &jwt.RegisteredClaims{
 		Issuer:    Auser.Email,
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add((7 * 24) * time.Hour)),
