@@ -47,15 +47,17 @@ class _MailState extends State<Mail> {
     try {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       final response = await http.get(
-        Uri.parse("http://26.65.220.249:3023/trade/waiting?Auth=$token"),
+        Uri.parse("http://26.65.220.249:3023/trade/dealer?Auth=$token"),
       );
 
       if (response.statusCode == 200) {
         final String responseBody = utf8.decode(response.bodyBytes);
         var jsonResponse = json.decode(responseBody);
+        
         setState(() {
           tradeItems = jsonResponse ?? [];
           isLoading = false;
+          log.d(tradeItems);
         });
       } else {
         throw Exception('Failed to load items');
@@ -87,13 +89,14 @@ class _MailState extends State<Mail> {
                           itemCount: tradeItems.length,
                           itemBuilder: (context, index) {
                             final trade = tradeItems[index];
-                            final item1 = trade["Owner"];
-                            final item2 = trade["Trader"];
-                            final user1 = trade["Owner"];
-                            final user2 = trade["Trader"];
+                            final item1 = trade["Item1"];
+                            final item2 = trade["Item2"];
+                            final user1 = trade["User1"];
+                            final user2 = trade["User2"];
 
                             return Card(
-                              margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 16),
                               elevation: 4,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -105,51 +108,67 @@ class _MailState extends State<Mail> {
                                   children: [
                                     Row(
                                       children: [
-                                        item1["Imagepath"] != null
+                                        item1 != null &&
+                                                item1["Imagepath"] != null
                                             ? Image.network(
                                                 "http://26.65.220.249:3023/api/image${item1["Imagepath"]}",
                                                 width: 80,
                                                 height: 80,
                                                 fit: BoxFit.cover,
                                               )
-                                            : const Icon(Icons.image_not_supported, size: 80),
+                                            : const Icon(
+                                                Icons.image_not_supported,
+                                                size: 80),
                                         const SizedBox(width: 16),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text("${item1["Name"]} ⇄ ${item2["Name"]}",
+                                              Text(
+                                                  "${item1?["Name"] ?? 'No Name'} ⇄ ${item2?["Name"] ?? 'No Name'}",
                                                   style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
                                                   )),
                                               const SizedBox(height: 8),
-                                              Text("Owner: ${user2["Name"]}"),
-                                              Text("Trader: ${user1["Name"]}"),
-                                              Text("Status: ${trade["StatusTrade"]}",
-                                                  style: const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.green)),
+                                              Text(
+                                                  "Owner: ${user2?["Name"] ?? 'No Name'}"),
+                                              Text(
+                                                  "Trader: ${user1?["Name"] ?? 'No Name'}"),
+                                              Text(
+                                                "Status: ${trade["StatusTrade"] ?? 'No Status'}",
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.green),
+                                              ),
                                             ],
                                           ),
                                         ),
                                         const SizedBox(width: 16),
-                                        item2["Imagepath"] != null
+                                        item2 != null &&
+                                                item2["Imagepath"] != null
                                             ? Image.network(
                                                 "http://26.65.220.249:3023/api/image${item2["Imagepath"]}",
                                                 width: 80,
                                                 height: 80,
                                                 fit: BoxFit.cover,
                                               )
-                                            : const Icon(Icons.image_not_supported, size: 80),
+                                            : const Icon(
+                                                Icons.image_not_supported,
+                                                size: 80),
                                       ],
                                     ),
                                     const SizedBox(height: 10),
-                                    Text("Owner Description: ${item1["Discription"]}"),
-                                    Text("Owner Location: ${item1["Location"]}"),
+                                    Text(
+                                        "Owner Description: ${item1?["Discription"] ?? 'No Description'}"),
+                                    Text(
+                                        "Owner Location: ${item1?["Location"] ?? 'No Location'}"),
                                     const SizedBox(height: 5),
-                                    Text("Trader Description: ${item2["Discription"]}"),
-                                    Text("Trader Location: ${item2["Location"]}"),
+                                    Text(
+                                        "Trader Description: ${item2?["Discription"] ?? 'No Description'}"),
+                                    Text(
+                                        "Trader Location: ${item2?["Location"] ?? 'No Location'}"),
                                   ],
                                 ),
                               ),
