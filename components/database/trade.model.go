@@ -30,7 +30,9 @@ type SendingAdding struct {
 }
 
 func TradeStatus(db *gorm.DB, trade *TradeInfo) error {
+	fmt.Println("awdkjawgiudgafdfawytd",trade)
 	result := db.Create(&trade)
+
 	if result.Error != nil {
 		return result.Error
 	}
@@ -57,7 +59,7 @@ func GetTradeWaiting(db *gorm.DB, userID int) ([]TradeInfo, error) {
 }
 
 func UpdateStatusTrade(db *gorm.DB, trade *TradeInfo) error {
-
+	fmt.Println("adwawdasdawdawdawd")
 	result := db.Model(&TradeInfo{}).
 		Where("user_owner_id = ? AND owner_item_id = ? AND trade_item_id = ?",
 			trade.UserOwnerID, trade.OwnerItemID, trade.TradeItemID).
