@@ -74,7 +74,7 @@ class _MailState extends State<Mail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TRADE START', style: TextStyle(color: Colors.white)),
+        title: const Text('MAIL', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF543310),
       ),
       body: Center(
