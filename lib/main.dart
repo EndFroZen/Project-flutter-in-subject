@@ -34,11 +34,7 @@ class LinkPage extends StatelessWidget {
         "/login": (context) => const Loginpage(),
         "/alliten": (context) => const AllItem(),
         "/additem": (context) => const Additem(),
-        "/user": (context) => const User(
-              authToken: '',
-            ),
-        
-        
+        "/user": (context) => const UserProfile(),
       },
     );
   }

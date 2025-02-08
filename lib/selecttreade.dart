@@ -12,6 +12,66 @@ class SelectItemScreen extends StatelessWidget {
   final int itemId;
 
   const SelectItemScreen({super.key, required this.itemId});
+  Future<List<dynamic>> ddfetchItems(BuildContext context, int id) async {
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+
+    if (token == null) {
+      throw Exception('No token found');
+    }
+
+
+
+    final response = await http.get(
+      Uri.parse('http://26.65.220.249:3023/api/someitem/$id?Auth=$token'),
+    );
+
+    if (response.statusCode == 200) {
+      final String responseBody = utf8.decode(response.bodyBytes);
+      List jsonResponse = json.decode(responseBody);
+
+      return jsonResponse;
+    } else {
+      throw Exception('Failed to load items');
+    }
+  }
+
+  Future<void> postpostselect(
+      BuildContext context, String tradeid, String ownder) async {
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    final url = Uri.parse('http://26.65.220.249:3023/trade?Auth=$token');
+    print(tradeid);
+    print(itemId);
+    print(ownder);
+    var dw = await ddfetchItems(context, itemId);
+    
+    var testdw = dw[0];
+   
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "userownerid": testdw["UserInfoID"],
+          "owneritemid": itemId,
+          "tradeitemid": tradeid,
+          "statustrade": "waiting",
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AllItem()),
+        );
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 
   Future<List<dynamic>> fetchData(BuildContext context) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
@@ -47,6 +107,9 @@ class SelectItemScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      // Convert item["ID"] and item["UserInfoID"] to String
+                      postpostselect(context, item["ID"].toString(),
+                          item["UserInfoID"].toString());
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => AllItem()),
@@ -81,7 +144,6 @@ class SelectItemScreen extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            log.d(snapshot.error);
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 

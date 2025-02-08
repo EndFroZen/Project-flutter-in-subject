@@ -71,7 +71,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
       throw Exception('No token found');
     }
 
-    log.d("Fetching items...");
+
 
     final response = await http.get(
       Uri.parse('http://26.65.220.249:3023/api/allitem?Auth=$token'),
@@ -80,7 +80,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
     if (response.statusCode == 200) {
       final String responseBody = utf8.decode(response.bodyBytes);
       List jsonResponse = json.decode(responseBody);
-      // log.d(jsonResponse);
+
       return jsonResponse.map((item) => Item.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load items');
@@ -149,7 +149,6 @@ class _ItemListScreenState extends State<ItemListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          log.d("กดปุ่มเพิ่มไอเท็ม");
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const Additem()),

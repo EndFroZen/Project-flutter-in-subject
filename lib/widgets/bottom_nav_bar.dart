@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:main/AuthProvider.dart';
 import 'package:main/allitem.dart';
+import 'package:main/mail.dart';
+import 'package:main/tredestate.dart';
 import 'package:main/user.dart';
 import 'package:provider/provider.dart';
 
@@ -30,19 +32,22 @@ class BottomNavBar extends StatelessWidget {
               );
               break;
             case 1:
-              Navigator.pushReplacementNamed(context, "/swap");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ScreenTrade()),
+              );
               break;
             case 2:
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => User(
-                          authToken: '$token',
-                        )),
+                MaterialPageRoute(builder: (context) => const UserProfile()),
               );
               break;
             case 3:
-              Navigator.pushReplacementNamed(context, "/search");
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Mail()),
+              );
               break;
           }
         }
@@ -61,8 +66,8 @@ class BottomNavBar extends StatelessWidget {
           label: 'User',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search, size: 28),
-          label: 'Search',
+          icon: Icon(Icons.mail_outline_rounded, size: 28),
+          label: 'Mail',
         ),
       ],
     );
