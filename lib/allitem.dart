@@ -5,10 +5,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:logger/logger.dart';
 import 'package:main/AuthProvider.dart';
 import 'package:main/additem.dart';
+import 'package:main/selecttreade.dart';
 import 'package:main/widgets/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 var log = Logger();
+
 
 class AllItem extends StatelessWidget {
   const AllItem({super.key});
@@ -44,7 +46,7 @@ class Item {
     return Item(
       id: json['ID'] ?? 0,
       name: json['Name'] ?? 'Unknown',
-      description: json['Description'] ?? 'No description',
+      description: json['Discription'] ?? 'No description',
       imagePath: json['Imagepath'] ?? '',
       account: json['UserInfo']?['Name'] ?? 'Unknown',
       location: "Unknown Location",
@@ -61,7 +63,6 @@ class ItemListScreen extends StatefulWidget {
 
 class _ItemListScreenState extends State<ItemListScreen> {
   late Future<List<Item>> items;
-  final String token = "your-static-token";
 
   Future<List<Item>> fetchItems() async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
@@ -79,7 +80,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
     if (response.statusCode == 200) {
       final String responseBody = utf8.decode(response.bodyBytes);
       List jsonResponse = json.decode(responseBody);
-      log.d(jsonResponse);
+      // log.d(jsonResponse);
       return jsonResponse.map((item) => Item.fromJson(item)).toList();
     } else {
       throw Exception('Failed to load items');
@@ -188,7 +189,8 @@ class ItemCard extends StatelessWidget {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(15)),
               child: Image.network(
                 'http://26.65.220.249:3023/api/image${item.imagePath}',
                 fit: BoxFit.cover,
@@ -204,8 +206,10 @@ class ItemCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text('by ${item.account}', style: const TextStyle(fontSize: 12)),
+                Text(item.name,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text('by ${item.account}',
+                    style: const TextStyle(fontSize: 12)),
                 Text(item.location, style: const TextStyle(fontSize: 12)),
               ],
             ),
@@ -220,7 +224,6 @@ class ItemDetailScreen extends StatelessWidget {
   final Item item;
 
   const ItemDetailScreen({super.key, required this.item});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -250,30 +253,40 @@ class ItemDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(item.name,
-                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                style:
+                    const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             Text('By: ${item.account}',
-                style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
+                style:
+                    const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
             const SizedBox(height: 10),
-            Text(
-              item.description,
-              style: const TextStyle(fontSize: 18),
-            ),
+            Text('Descrption: ${item.description}',
+                style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 10),
-            Text('Location: ${item.location}', style: const TextStyle(fontSize: 18)),
+            Text('Location: ${item.location}',
+                style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 100),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          SelectItemScreen(itemId: item.id), // ✅ ส่งค่า itemId
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF543310),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child:
-                    const Icon(Icons.compare_arrows, color: Colors.white, size: 60),
+                child: const Icon(Icons.compare_arrows,
+                    color: Colors.white, size: 60),
               ),
             )
           ],
