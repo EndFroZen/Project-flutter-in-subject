@@ -32,7 +32,7 @@ func init() {
 }
 
 func authendicationMethod(c *fiber.Ctx) error {
-
+	
 	authHeader := c.Query("Auth")
 	KEY := os.Getenv("KEY")
 	secretKey := []byte(KEY)
@@ -103,9 +103,7 @@ func main() {
 		}
 		token, err := database.Login(DB, user)
 		if err != nil {
-			return c.JSON(fiber.Map{
-				"token": nil,
-			})
+			return c.SendStatus(fiber.ErrBadRequest.Code)
 		}
 		return c.JSON(fiber.Map{
 			"token": token,
@@ -125,6 +123,7 @@ func main() {
 				"detail": err.Error(),
 			})
 		}
+		
 		fmt.Printf("GET /api/allitem AT %s by %s\n", time.Now(), userData.Email)
 		return c.JSON(allItem)
 	})
@@ -158,6 +157,7 @@ func main() {
 				"detail": err.Error(),
 			})
 		}
+		database.Deletedealer(DB)
 		fmt.Printf("GET /api/myitem AT %s by %s\n", time.Now(), userData.Email)
 		return c.JSON(fiber.Map{
 			"user": userData,
@@ -174,6 +174,7 @@ func main() {
 		email := c.Locals("email").(string)
 		userData, _ := database.GetUserByEmail(DB, email)
 		tradewaiting, err := database.GetTradeWaiting(DB, int(userData.ID))
+		database.Deletedealer(DB)
 		if err != nil {
 			return c.JSON(fiber.Map{
 				"status": "Error",
@@ -186,6 +187,7 @@ func main() {
 		email := c.Locals("email").(string)
 		userData, _ := database.GetUserByEmail(DB, email)
 		traddealer, err := database.GetTradeDealer(DB, int(userData.ID))
+		database.Deletedealer(DB)
 		if err != nil {
 			return c.JSON(fiber.Map{
 				"status": "Error",
@@ -211,6 +213,7 @@ func main() {
 
 	// post data -----------------------------------------------------------------------------------
 	app.Post("/postitem", func(c *fiber.Ctx) error {
+		database.Deletedealer(DB)
 		email := c.Locals("email").(string)
 		userData, err := database.GetUserByEmail(DB, email)
 		if err != nil {
@@ -253,6 +256,7 @@ func main() {
 	})
 
 	app.Post("/trade", func(c *fiber.Ctx) error {
+		database.Deletedealer(DB)
 		email := c.Locals("email").(string)
 		userData, _ := database.GetUserByEmail(DB, email)
 
@@ -308,6 +312,7 @@ func main() {
 	// Helper function to handle conversion from float64 to int64
 
 	app.Put("/trade/update", func(c *fiber.Ctx) error {
+		
 		email := c.Locals("email").(string)
 		userData, _ := database.GetUserByEmail(DB, email)
 
@@ -319,27 +324,12 @@ func main() {
 			})
 		}
 
-		// Extract values and handle them if they're float64
-		userownerid := req["userownerid"]
-		owneritemid := req["owneritemid"]
-		tradeitemid := req["tradeitemid"]
-		fmt.Sprintln("userouner =%s ownitem=%s tradeitem=%s",userownerid,owneritemid,tradeitemid)
-		// Convert from float64 to int64
-		userowneridInt, _ := toInt64(userownerid)
-		owneritemidInt, _ := toInt64(owneritemid)
-		tradeitemidInt, _ := toInt64(tradeitemid)
-
-		// Debug prints
-		fmt.Println("userownerid:", userowneridInt)
-		fmt.Println("owneritemid:", owneritemidInt)
-		fmt.Println("tradeitemid:", tradeitemidInt)
-
-		// Create the TradeInfo struct
+		tradeid := req["tradeidnumber"]
+		tradeidnew, _ := toInt64(tradeid)
+		fmt.Println(tradeidnew)
 		tradeJson := &database.TradeInfo{
-			UserTraderID: uint(tradeitemidInt),
+			UserTraderID: uint(tradeidnew),
 			UserOwnerID:  userData.ID,
-			OwnerItemID:  uint(owneritemidInt),
-			TradeItemID:  uint(userowneridInt),
 			StatusTrade:  req["statustrade"].(string),
 		}
 
@@ -348,6 +338,7 @@ func main() {
 
 		// Call TradeStatus to process the trade
 		err := database.UpdateStatusTrade(DB, tradeJson)
+		database.Deletedealer(DB)
 		if err != nil {
 			return c.JSON(fiber.Map{
 				"status": "Error at adding trade",

@@ -30,7 +30,7 @@ type SendingAdding struct {
 }
 
 func TradeStatus(db *gorm.DB, trade *TradeInfo) error {
-	fmt.Println("awdkjawgiudgafdfawytd",trade)
+	fmt.Println("awdkjawgiudgafdfawytd", trade)
 	result := db.Create(&trade)
 
 	if result.Error != nil {
@@ -43,7 +43,8 @@ func GetTradeWaiting(db *gorm.DB, userID int) ([]TradeInfo, error) {
 	var dealers []TradeInfo
 	// fmt.Println(userID)
 
-	result := db.Debug().Where("user_owner_id = ? AND status_trade = ?", userID, "waiting").
+	result := db.Debug().Where("user_owner_id = ? AND status_trade = ? ", userID, "waiting").
+		Order("created_at DESC").
 		Preload("User1").
 		Preload("User2").
 		Preload("Item1").
@@ -59,10 +60,8 @@ func GetTradeWaiting(db *gorm.DB, userID int) ([]TradeInfo, error) {
 }
 
 func UpdateStatusTrade(db *gorm.DB, trade *TradeInfo) error {
-	fmt.Println("adwawdasdawdawdawd")
 	result := db.Model(&TradeInfo{}).
-		Where("user_owner_id = ? AND owner_item_id = ? AND trade_item_id = ?",
-			trade.UserOwnerID, trade.OwnerItemID, trade.TradeItemID).
+		Where("id = ? ", trade.UserTraderID).
 		Update("status_trade", trade.StatusTrade)
 	if result.Error != nil {
 		return result.Error
@@ -80,7 +79,8 @@ func GetTradeDealer(db *gorm.DB, userID int) ([]TradeInfo, error) {
 	var dealers []TradeInfo
 	// fmt.Println(userID)
 
-	result := db.Debug().Where("user_owner_id = ? AND status_trade = ?", userID, "dealer").
+	result := db.Debug().Unscoped().Where("(user_owner_id = ? OR user_trader_id = ? )AND status_trade = ? ", userID, userID, "dealer").
+		Order("updated_at DESC").
 		Preload("User1").
 		Preload("User2").
 		Preload("Item1").
@@ -114,10 +114,53 @@ func GetSomeTradeDealer(db *gorm.DB, userID int, iddealer int) ([]TradeInfo, err
 	return dealers, nil
 }
 
-func SendingaddTrade(db *gorm.DB ,SendingAdding *SendingAdding)error  {
+func SendingaddTrade(db *gorm.DB, SendingAdding *SendingAdding) error {
 	result := db.Create(&SendingAdding)
 	if result.Error != nil {
 		return result.Error
 	}
+	return nil
+}
+
+func Deletedealer(db *gorm.DB) error {
+	var trades []TradeInfo
+
+	// Delete items related to 'dealer' status trades
+	result := db.Where("status_trade = ?", "dealer").Find(&trades)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	for _, trade := range trades {
+		if err := db.Where("id = ?", trade.TradeItemID).Delete(&ItemInfo{}).Error; err != nil {
+			return err
+		}
+		if err := db.Where("id = ?", trade.OwnerItemID).Delete(&ItemInfo{}).Error; err != nil {
+			return err
+		}
+	}
+	result = db.Where("status_trade = ?", "waiting").Find(&trades)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	for _, trade := range trades {
+
+		var item []ItemInfo
+		if err := db.Where("id = ? AND deleted_at IS NOT NULL", trade.TradeItemID).First(&item).Error; err == nil {
+
+			if err := db.Where("id = ?", trade.ID).Delete(&TradeInfo{}).Error; err != nil {
+				return err
+			}
+		}
+
+		if err := db.Where("id = ? AND deleted_at IS NOT NULL", trade.OwnerItemID).First(&item).Error; err == nil {
+			// If the item is deleted, delete the related TradeInfo
+			if err := db.Where("id = ?", trade.ID).Delete(&TradeInfo{}).Error; err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
