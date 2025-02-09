@@ -5,6 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:logger/logger.dart';
 import 'package:main/AuthProvider.dart';
 import 'package:main/additem.dart';
+import 'package:main/itemdetail.dart';
 import 'package:main/selecttreade.dart';
 import 'package:main/widgets/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -219,78 +220,3 @@ class ItemCard extends StatelessWidget {
   }
 }
 
-class ItemDetailScreen extends StatelessWidget {
-  final Item item;
-
-  const ItemDetailScreen({super.key, required this.item});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F4E1),
-      appBar: AppBar(
-        title: Text(item.name, style: const TextStyle(color: Colors.white)),
-        backgroundColor: const Color(0xFF543310),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  'http://26.65.220.249:3023/api/image${item.imagePath}',
-                  height: 250,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(Icons.broken_image, size: 100);
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(item.name,
-                style:
-                    const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            Text('By: ${item.account}',
-                style:
-                    const TextStyle(fontSize: 18, fontStyle: FontStyle.italic)),
-            const SizedBox(height: 10),
-            Text('Descrption: ${item.description}',
-                style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 10),
-            Text('Location: ${item.location}',
-                style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 100),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          SelectItemScreen(itemId: item.id), // ✅ ส่งค่า itemId
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF543310),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Icon(Icons.compare_arrows,
-                    color: Colors.white, size: 60),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

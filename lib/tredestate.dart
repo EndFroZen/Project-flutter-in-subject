@@ -54,7 +54,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
       if (response.statusCode == 200) {
         final String responseBody = utf8.decode(response.bodyBytes);
         var jsonResponse = json.decode(responseBody);
-        log.e(jsonResponse);
+        
         setState(() {
           tradeItems = jsonResponse ?? [];
           isLoading = false;
@@ -70,24 +70,18 @@ class _ScreenTradeState extends State<ScreenTrade> {
     }
   }
 
-  Future<void> handleTradeAction(BuildContext context, int itemtradeid,
-      int itemownder, int tradeidid, int owuwdau, String State) async {
+  Future<void> handleTradeAction(BuildContext context, int tradeID ,String State) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
-    final url = Uri.parse('http://26.65.220.249:3023/trade?Auth=$token');
-    log.e(itemtradeid);
-    log.e(itemownder);
-    log.e(tradeidid);
-    log.e(owuwdau);
+    final url = Uri.parse('http://26.65.220.249:3023/trade/update?Auth=$token');
+  
     try {
-      final response = await http.post(
+      final response = await http.put(
         url,
         headers: {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          "userownerid": itemtradeid,
-          "owneritemid": itemownder,
-          "tradeitemid": owuwdau,
+          "tradeidnumber":tradeID,
           "statustrade": State,
         }),
       );
@@ -209,22 +203,12 @@ class _ScreenTradeState extends State<ScreenTrade> {
                                           btntogetstate("❌DENY", 0xFFFF7A6B,
                                               () {
                                             handleTradeAction(
-                                                context,
-                                                item2["ID"],
-                                                item1["ID"],
-                                                user2["ID"],
-                                                user1["ID"],
-                                                "deny");
+                                                context, trade["ID"], "deny");
                                           }),
                                           btntogetstate("DEALER✅", 0xFF5BFF63,
                                               () {
                                             handleTradeAction(
-                                                context,
-                                                item2["ID"],
-                                                item1["ID"],
-                                                user2["ID"],
-                                                user1["ID"],
-                                                "dealer");
+                                                context, trade["ID"], "dealer");
                                           }),
                                         ],
                                       )

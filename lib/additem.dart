@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:main/AuthProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -33,7 +35,8 @@ class _AdditemState extends State<Additem> {
 
   // ฟังก์ชันอัปโหลดข้อมูลไป API
   Future<void> postItem(String name, String description, String location, String base64file) async {
-    final url = Uri.parse('http://26.65.220.249:3023/postitem');
+    final token = Provider.of<AuthProvider>(context, listen: false).token;
+    final url = Uri.parse('http://26.65.220.249:3023/postitem?Auth=$token');
 
     try {
       final response = await http.post(

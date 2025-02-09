@@ -19,13 +19,8 @@ Future<String?> login(
   try {
     final response = await http.post(
       url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
     );
 
     if (response.statusCode == 200) {
@@ -33,11 +28,15 @@ Future<String?> login(
       String token = responseData['token'];
       Provider.of<AuthProvider>(context, listen: false).setToken(token);
 
-      // Navigate to the next screen
       Navigator.pushReplacementNamed(context, "/allitem");
       return token;
     } else {
-      print("Login failed: ${response.statusCode} - ${response.body}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Email or password is invalid!"),
+          backgroundColor: Colors.red,
+        ),
+      );
       return null;
     }
   } catch (e) {
@@ -86,7 +85,8 @@ class Loginpage extends StatelessWidget {
       home: const AuthScreen(),
       routes: {
         '/login': (context) => const Loginpage(),
-        '/allitem': (context) => const AllItem(), // Define your AllItem screen here
+        '/allitem': (context) =>
+            const AllItem(), // Define your AllItem screen here
       },
     );
   }
@@ -140,12 +140,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 60, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      side: const BorderSide(color: Color(0xFF543310), width: 1),
+                      side:
+                          const BorderSide(color: Color(0xFF543310), width: 1),
                     ),
                     onPressed: () {
                       _showBottomSheet(context, isSignUp: false);
@@ -162,8 +163,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF543310),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 60, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -284,7 +285,8 @@ class _AuthScreenState extends State<AuthScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFF8F4E1),
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -300,12 +302,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       await register(context, email, name, password, phone);
                       Navigator.pushNamed(context, "/login");
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Passwords do not match!"),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
+                      showErrorDialog(context, "Register fial", "Password doesn't match!");
                     }
                   } else {
                     String email = emailController.text;
@@ -316,7 +313,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       Navigator.pushNamed(context, "/allitem");
                       print("Login successful! Token: $token");
                     } else {
-                      print("Login failed.");
+                      showErrorDialog(context, "Login Failed", "Email or Password invalid plase try again!");
                     }
                   }
                 },
@@ -334,4 +331,52 @@ class _AuthScreenState extends State<AuthScreen> {
       },
     );
   }
+}
+void showErrorDialog(BuildContext context, String title, String message) {
+  showAdaptiveDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        backgroundColor: Colors.white,
+        title: Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.red, size: 28),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 16),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: Text("OK", style: TextStyle(fontSize: 16)),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }

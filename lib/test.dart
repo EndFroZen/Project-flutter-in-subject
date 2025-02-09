@@ -1,336 +1,223 @@
-import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:http/http.dart' as http;
-import 'package:main/AuthProvider.dart';
-import 'dart:convert';
-import 'package:provider/provider.dart';
+// import 'dart:convert';
+// import 'package:flutter/material.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:dotted_border/dotted_border.dart';
+// import 'package:logger/logger.dart';
+// import 'package:main/AuthProvider.dart';
+// import 'package:main/additem.dart';
+// import 'package:main/selecttreade.dart';
+// import 'package:main/widgets/bottom_nav_bar.dart';
+// import 'package:provider/provider.dart';
 
-TextEditingController emailController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
-TextEditingController confirmpasswordController = TextEditingController();
-TextEditingController usernameController = TextEditingController();
-TextEditingController phoneController = TextEditingController();
+// var log = Logger();
 
-Future<String?> login(
-    BuildContext context, String email, String password) async {
-  final url = Uri.parse('http://26.65.220.249:3023/login');
 
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
-    );
+// class AllItem extends StatelessWidget {
+//   const AllItem({super.key});
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      String token = responseData['token'];
-      Provider.of<AuthProvider>(context, listen: false).setToken(token);
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Scaffold(
+//       backgroundColor: Color(0xFFF8F4E1),
+//       body: ItemListScreen(),
+//       bottomNavigationBar: BottomNavBar(currentIndex: 0),
+//     );
+//   }
+// }
 
-      // Navigate to the next screen
-      Navigator.pushReplacementNamed(context, "/allitem");
-      return token;
-    } else {
-      print("Login failed: ${response.statusCode} - ${response.body}");
-      return null;
-    }
-  } catch (e) {
-    print("Error: $e");
-    return null;
-  }
-}
+// class Item {
+//   final int id;
+//   final String name;
+//   final String description;
+//   final String imagePath;
+//   final String account;
+//   final String location;
 
-Future<void> register(BuildContext context, String email, String name,
-    String password, String phone) async {
-  final url = Uri.parse('http://26.65.220.249:3023/register');
+//   Item({
+//     required this.id,
+//     required this.name,
+//     required this.description,
+//     required this.imagePath,
+//     required this.account,
+//     required this.location,
+//   });
 
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        "phone": phone,
-        "name": name,
-        'email': email,
-        'password': password,
-      }),
-    );
+//   factory Item.fromJson(Map<String, dynamic> json) {
+//     return Item(
+//       id: json['ID'] ?? 0,
+//       name: json['Name'] ?? 'Unknown',
+//       description: json['Discription'] ?? 'No description',
+//       imagePath: json['Imagepath'] ?? '',
+//       account: json['UserInfo']?['Name'] ?? 'Unknown',
+//       location: "Unknown Location",
+//     );
+//   }
+// }
 
-    if (response.statusCode == 200) {
-      Navigator.pushReplacementNamed(context, "/allitem");
-    } else {
-      print("Login failed: ${response.statusCode} - ${response.body}");
-      return;
-    }
-  } catch (e) {
-    print("Error: $e");
-    return;
-  }
-}
+// class ItemListScreen extends StatefulWidget {
+//   const ItemListScreen({super.key});
 
-class Loginpage extends StatelessWidget {
-  const Loginpage({super.key});
+//   @override
+//   _ItemListScreenState createState() => _ItemListScreenState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AuthScreen(),
-      // routes: {"/allitem": (context) => AllItem()},
-    );
-  }
-}
+// class _ItemListScreenState extends State<ItemListScreen> {
+//   late Future<List<Item>> items;
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+//   Future<List<Item>> fetchItems() async {
+//     final token = Provider.of<AuthProvider>(context, listen: false).token;
 
-  @override
-  _AuthScreenState createState() => _AuthScreenState();
-}
+//     if (token == null) {
+//       throw Exception('No token found');
+//     }
 
-class _AuthScreenState extends State<AuthScreen> {
-  String? token;
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    // หากไม่มี token ให้แสดงหน้าจอ login/signup
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F4E1),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: DottedBorder(
-          color: Colors.black,
-          strokeWidth: 6,
-          dashPattern: const [10, 4],
-          borderType: BorderType.RRect,
-          radius: const Radius.circular(12),
-          child: DecoratedBox(
-            decoration: const BoxDecoration(
-              color: Color(0xFFF8F4E1),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    'TradeOn',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF543310),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      side: const BorderSide(color: Color(0xFF543310), width: 1),
-                    ),
-                    onPressed: () {
-                      _showBottomSheet(context, isSignUp: false);
-                    },
-                    child: const Text(
-                      'SIGN IN',
-                      style: TextStyle(
-                        color: Color(0xFF543310),
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF543310),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {
-                      _showBottomSheet(context, isSignUp: true);
-                    },
-                    child: const Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+//     final response = await http.get(
+//       Uri.parse('http://26.65.220.249:3023/api/allitem?Auth=$token'),
+//     );
 
-  void _showBottomSheet(BuildContext context, {required bool isSignUp}) {
-    // แสดงหน้าจอ BottomSheet สำหรับ Login หรือ SignUp
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: const Color(0xFFAF8F6F),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                isSignUp ? 'Sign Up' : 'Sign In',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFFFFFFF),
-                ),
-              ),
-              const SizedBox(height: 20),
-              if (isSignUp)
-                TextField(
-                  controller: usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'Username',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              if (isSignUp) const SizedBox(height: 10),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              if (isSignUp) const SizedBox(height: 10),
-              if (isSignUp)
-                TextField(
-                  controller: confirmpasswordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'confirm Password',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              if (isSignUp) const SizedBox(height: 10),
-              if (isSignUp)
-                TextField(
-                  controller: phoneController,
-                  decoration: InputDecoration(
-                    labelText: 'Phone Number',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF8F4E1),
-                  padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: () async {
-                  if (isSignUp) {
-                    String email = emailController.text;
-                    String name = usernameController.text;
-                    String phone = phoneController.text;
-                    String password = passwordController.text;
-                    String confirmpass = confirmpasswordController.text;
-                    if (password == confirmpass) {
-                      await register(context, email, name, password, phone);
-                      Navigator.pushNamed(context, "/login");
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("รหัสผ่านไม่ตรงกัน!"),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                    Navigator.pushNamed(context, "/login");
-                  } else {
-                    String email = emailController.text;
-                    String password = passwordController.text;
+//     if (response.statusCode == 200) {
+//       final String responseBody = utf8.decode(response.bodyBytes);
+//       List jsonResponse = json.decode(responseBody);
 
-                    String? token = await login(context, email, password);
-                    Navigator.pushNamed(context, "/allitem");
-                    if (token != null) {
-                      print("Login successful! Token: $token");
-                    } else {
-                      print("Login failed.");
-                    }
-                  }
-                },
-                child: Text(
-                  isSignUp ? 'SIGN UP' : 'SIGN IN',
-                  style: const TextStyle(
-                    color: Color(0xFF543310),
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+//       return jsonResponse.map((item) => Item.fromJson(item)).toList();
+//     } else {
+//       throw Exception('Failed to load items');
+//     }
+//   }
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     items = fetchItems();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: const Color(0xFFF8F4E1),
+//       appBar: AppBar(
+//         title: const Text('Item List', style: TextStyle(color: Colors.white)),
+//         backgroundColor: const Color(0xFF543310),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(20.0),
+//         child: DottedBorder(
+//           color: Colors.black,
+//           strokeWidth: 3,
+//           dashPattern: const [10, 5],
+//           borderType: BorderType.RRect,
+//           radius: const Radius.circular(15),
+//           padding: const EdgeInsets.all(10),
+//           child: FutureBuilder<List<Item>>(
+//             future: items,
+//             builder: (context, snapshot) {
+//               if (snapshot.connectionState == ConnectionState.waiting) {
+//                 return const Center(child: CircularProgressIndicator());
+//               } else if (snapshot.hasError) {
+//                 return Center(child: Text('Error: ${snapshot.error}'));
+//               } else if (snapshot.hasData) {
+//                 return GridView.builder(
+//                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//                     crossAxisCount: 2,
+//                     crossAxisSpacing: 8.0,
+//                     mainAxisSpacing: 8.0,
+//                   ),
+//                   itemCount: snapshot.data!.length,
+//                   itemBuilder: (context, index) {
+//                     final item = snapshot.data![index];
+//                     return GestureDetector(
+//                       onTap: () {
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (context) => ItemDetailScreen(item: item),
+//                           ),
+//                         );
+//                       },
+//                       child: ItemCard(item: item),
+//                     );
+//                   },
+//                 );
+//               } else {
+//                 return const Center(child: Text('No items found.'));
+//               }
+//             },
+//           ),
+//         ),
+//       ),
+//       floatingActionButton: FloatingActionButton(
+//         onPressed: () {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(builder: (context) => const Additem()),
+//           );
+//         },
+//         backgroundColor: const Color(0xFF543310),
+//         shape: RoundedRectangleBorder(
+//           borderRadius: BorderRadius.circular(30),
+//         ),
+//         child: const Icon(Icons.add, size: 38, color: Colors.white),
+//       ),
+//     );
+//   }
+// }
+
+// class ItemCard extends StatelessWidget {
+//   final Item item;
+
+//   const ItemCard({super.key, required this.item});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(15),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.2),
+//             offset: const Offset(2, 2),
+//             blurRadius: 5,
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Expanded(
+//             child: ClipRRect(
+//               borderRadius:
+//                   const BorderRadius.vertical(top: Radius.circular(15)),
+//               child: Image.network(
+//                 'http://26.65.220.249:3023/api/image${item.imagePath}',
+//                 fit: BoxFit.cover,
+//                 width: double.infinity,
+//                 errorBuilder: (context, error, stackTrace) {
+//                   return const Icon(Icons.broken_image, size: 50);
+//                 },
+//               ),
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(8.0),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(item.name,
+//                     style: const TextStyle(fontWeight: FontWeight.bold)),
+//                 Text('by ${item.account}',
+//                     style: const TextStyle(fontSize: 12)),
+//                 Text(item.location, style: const TextStyle(fontSize: 12)),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
+// ทำให้สวยทันใส่แค่สียังคงแบบเดิม

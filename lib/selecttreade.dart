@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:main/AuthProvider.dart';
 import 'package:main/allitem.dart';
+import 'package:main/widgets/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 var log = Logger();
@@ -12,14 +13,13 @@ class SelectItemScreen extends StatelessWidget {
   final int itemId;
 
   const SelectItemScreen({super.key, required this.itemId});
+
   Future<List<dynamic>> ddfetchItems(BuildContext context, int id) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
 
     if (token == null) {
       throw Exception('No token found');
     }
-
-
 
     final response = await http.get(
       Uri.parse('http://26.65.220.249:3023/api/someitem/$id?Auth=$token'),
@@ -28,7 +28,6 @@ class SelectItemScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       final String responseBody = utf8.decode(response.bodyBytes);
       List jsonResponse = json.decode(responseBody);
-
       return jsonResponse;
     } else {
       throw Exception('Failed to load items');
@@ -39,13 +38,9 @@ class SelectItemScreen extends StatelessWidget {
       BuildContext context, String tradeid, String ownder) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
     final url = Uri.parse('http://26.65.220.249:3023/trade?Auth=$token');
-    print(tradeid);
-    print(itemId);
-    print(ownder);
     var dw = await ddfetchItems(context, itemId);
-    
     var testdw = dw[0];
-   
+
     try {
       final response = await http.post(
         url,
@@ -81,8 +76,6 @@ class SelectItemScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       final String responseBody = utf8.decode(response.bodyBytes);
       var jsonResponse = json.decode(responseBody);
-
-      // Now using the 'item' key from the JSON response
       return jsonResponse['item'] ??
           []; // Return an empty list if 'item' is null
     } else {
@@ -107,7 +100,6 @@ class SelectItemScreen extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Convert item["ID"] and item["UserInfoID"] to String
                       postpostselect(context, item["ID"].toString(),
                           item["UserInfoID"].toString());
                       Navigator.push(
@@ -135,7 +127,13 @@ class SelectItemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Select Item")),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF543310),
+        title: const Text(
+          "Select Item",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: FutureBuilder<List<dynamic>>(
         future: fetchData(context),
         builder: (context, snapshot) {
@@ -163,30 +161,46 @@ class SelectItemScreen extends StatelessWidget {
                 return GestureDetector(
                   onTap: () => _showItemDetails(context, item),
                   child: Card(
-                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    elevation: 5,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(12),
-                      title: Text(
-                        item['Name'],
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        item['Discription'],
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          imageUrl,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
+                    elevation: 8,
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    color: Colors.blueGrey.shade100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(15)),
+                          child: Image.network(
+                            imageUrl,
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            item['Name'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.blueGrey.shade800,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            item['Discription'],
+                            style: TextStyle(
+                                fontSize: 14, color: Colors.blueGrey.shade600),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
@@ -197,6 +211,7 @@ class SelectItemScreen extends StatelessWidget {
           return Center(child: Text('No data available'));
         },
       ),
+      bottomNavigationBar: const BottomNavBar(currentIndex: 0),
     );
   }
 }

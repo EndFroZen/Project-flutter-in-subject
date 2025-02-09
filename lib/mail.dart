@@ -53,11 +53,10 @@ class _MailState extends State<Mail> {
       if (response.statusCode == 200) {
         final String responseBody = utf8.decode(response.bodyBytes);
         var jsonResponse = json.decode(responseBody);
-        
+
         setState(() {
           tradeItems = jsonResponse ?? [];
           isLoading = false;
-          log.d(tradeItems);
         });
       } else {
         throw Exception('Failed to load items');
@@ -179,7 +178,7 @@ class _MailState extends State<Mail> {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(currentIndex: 1),
+      bottomNavigationBar: const BottomNavBar(currentIndex: 3),
     );
   }
 }
