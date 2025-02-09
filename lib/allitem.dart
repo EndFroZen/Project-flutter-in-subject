@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:main/AuthProvider.dart';
 import 'package:main/additem.dart';
 import 'package:main/itemdetail.dart';
-import 'package:main/selecttreade.dart';
+
 import 'package:main/widgets/bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
 
