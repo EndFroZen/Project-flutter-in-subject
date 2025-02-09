@@ -113,6 +113,9 @@ func main() {
 	// user ----------------------------------------------------------------------------------------
 
 	// get data ------------------------------------------------------------------------------------
+	app.Get("/policy",func(c *fiber.Ctx) error {
+		return c.SendFile("tradeon.html")
+	})
 	app.Get("/api/allitem", func(c *fiber.Ctx) error {
 		email := c.Locals("email").(string)
 		userData, _ := database.GetUserByEmail(DB, email)
