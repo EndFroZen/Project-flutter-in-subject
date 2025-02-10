@@ -192,7 +192,7 @@ class ItemCard extends StatelessWidget {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(15)),
               child: Image.network(
-                'http://26.65.220.249:3023/api/image${item.imagePath}',
+                'https://arther.bxoks.online/api/image${item.imagePath}',
                 fit: BoxFit.cover,
                 width: double.infinity,
                 errorBuilder: (context, error, stackTrace) {
