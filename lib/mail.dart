@@ -47,7 +47,7 @@ class _MailState extends State<Mail> {
     try {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       final response = await http.get(
-        Uri.parse("http://26.65.220.249:3023/trade/dealer?Auth=$token"),
+        Uri.parse("https://arther.bxoks.online/trade/dealer?Auth=$token"),
       );
 
       if (response.statusCode == 200) {
@@ -110,7 +110,7 @@ class _MailState extends State<Mail> {
                                         item1 != null &&
                                                 item1["Imagepath"] != null
                                             ? Image.network(
-                                                "http://26.65.220.249:3023/api/image${item1["Imagepath"]}",
+                                                "https://arther.bxoks.online/api/image${item1["Imagepath"]}",
                                                 width: 80,
                                                 height: 80,
                                                 fit: BoxFit.cover,
@@ -148,7 +148,7 @@ class _MailState extends State<Mail> {
                                         item2 != null &&
                                                 item2["Imagepath"] != null
                                             ? Image.network(
-                                                "http://26.65.220.249:3023/api/image${item2["Imagepath"]}",
+                                                "https://arther.bxoks.online/api/image${item2["Imagepath"]}",
                                                 width: 80,
                                                 height: 80,
                                                 fit: BoxFit.cover,

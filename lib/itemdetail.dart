@@ -29,7 +29,7 @@ class ItemDetailScreen extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Image.network(
-                    'http://26.65.220.249:3023/api/image${item.imagePath}',
+                    'https://arther.bxoks.online//api/image${item.imagePath}',
                     height: 250,
                     width: double.infinity,
                     fit: BoxFit.cover,

@@ -22,7 +22,7 @@ class SelectItemScreen extends StatelessWidget {
     }
 
     final response = await http.get(
-      Uri.parse('http://26.65.220.249:3023/api/someitem/$id?Auth=$token'),
+      Uri.parse('https://arther.bxoks.online/api/someitem/$id?Auth=$token'),
     );
 
     if (response.statusCode == 200) {
@@ -37,7 +37,7 @@ class SelectItemScreen extends StatelessWidget {
   Future<void> postpostselect(
       BuildContext context, String tradeid, String ownder) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
-    final url = Uri.parse('http://26.65.220.249:3023/trade?Auth=$token');
+    final url = Uri.parse('https://arther.bxoks.online/trade?Auth=$token');
     var dw = await ddfetchItems(context, itemId);
     var testdw = dw[0];
 
@@ -71,7 +71,7 @@ class SelectItemScreen extends StatelessWidget {
   Future<List<dynamic>> fetchData(BuildContext context) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
     final response = await http
-        .get(Uri.parse("http://26.65.220.249:3023/api/myitem?Auth=$token"));
+        .get(Uri.parse("https://arther.bxoks.online/api/myitem?Auth=$token"));
 
     if (response.statusCode == 200) {
       final String responseBody = utf8.decode(response.bodyBytes);
@@ -157,7 +157,7 @@ class SelectItemScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final item = items[index];
                 final imageUrl =
-                    "http://26.65.220.249:3023/api/image" + item['Imagepath'];
+                    "https://arther.bxoks.online/api/image" + item['Imagepath'];
                 return GestureDetector(
                   onTap: () => _showItemDetails(context, item),
                   child: Card(

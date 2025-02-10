@@ -75,7 +75,7 @@ class _ItemListScreenState extends State<ItemListScreen> {
 
 
     final response = await http.get(
-      Uri.parse('http://26.65.220.249:3023/api/allitem?Auth=$token'),
+      Uri.parse('https://arther.bxoks.online/api/allitem?Auth=$token'),
     );
 
     if (response.statusCode == 200) {

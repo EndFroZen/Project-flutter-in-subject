@@ -36,7 +36,7 @@ class _AdditemState extends State<Additem> {
   // ฟังก์ชันอัปโหลดข้อมูลไป API
   Future<void> postItem(String name, String description, String location, String base64file) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
-    final url = Uri.parse('http://26.65.220.249:3023/postitem?Auth=$token');
+    final url = Uri.parse('https://arther.bxoks.online/postitem?Auth=$token');
 
     try {
       final response = await http.post(

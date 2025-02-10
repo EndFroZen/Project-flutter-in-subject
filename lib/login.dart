@@ -14,7 +14,7 @@ TextEditingController phoneController = TextEditingController();
 
 Future<String?> login(
     BuildContext context, String email, String password) async {
-  final url = Uri.parse('http://26.65.220.249:3023/login');
+  final url = Uri.parse('https://arther.bxoks.online/login');
 
   try {
     final response = await http.post(
@@ -47,7 +47,7 @@ Future<String?> login(
 
 Future<void> register(BuildContext context, String email, String name,
     String password, String phone) async {
-  final url = Uri.parse('http://26.65.220.249:3023/register');
+  final url = Uri.parse('https://arther.bxoks.online/register');
 
   try {
     final response = await http.post(

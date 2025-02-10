@@ -56,7 +56,7 @@ class _UserProfileState extends State<UserProfile> {
     try {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       final response = await http.get(
-        Uri.parse("http://26.65.220.249:3023/api/myitem?Auth=$token"),
+        Uri.parse("https://arther.bxoks.online/api/myitem?Auth=$token"),
       );
 
       if (response.statusCode == 200) {
@@ -112,7 +112,7 @@ class _UserProfileState extends State<UserProfile> {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       final response = await http.delete(
         Uri.parse(
-            "http://26.65.220.249:3023/api/deleteitem/${item['ID']}?Auth=$token"),
+            "https://arther.bxoks.online/api/deleteitem/${item['ID']}?Auth=$token"),
       );
 
       if (response.statusCode == 200) {
@@ -194,7 +194,7 @@ class _UserProfileState extends State<UserProfile> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Image.network(
-                                    "http://26.65.220.249:3023/api/image${item['Imagepath']}",
+                                    "https://arther.bxoks.online/api/image${item['Imagepath']}",
                                     height: 100,
                                     width: double.infinity,
                                     fit: BoxFit.cover,

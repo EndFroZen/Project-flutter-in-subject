@@ -48,7 +48,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
     try {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       final response = await http.get(
-        Uri.parse("http://26.65.220.249:3023/trade/waiting?Auth=$token"),
+        Uri.parse("https://arther.bxoks.online/trade/waiting?Auth=$token"),
       );
 
       if (response.statusCode == 200) {
@@ -72,7 +72,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
 
   Future<void> handleTradeAction(BuildContext context, int tradeID ,String State) async {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
-    final url = Uri.parse('http://26.65.220.249:3023/trade/update?Auth=$token');
+    final url = Uri.parse('https://arther.bxoks.online/trade/update?Auth=$token');
   
     try {
       final response = await http.put(
@@ -139,7 +139,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
                                         children: [
                                           item1["Imagepath"] != null
                                               ? Image.network(
-                                                  "http://26.65.220.249:3023/api/image${item2["Imagepath"]}",
+                                                  "https://arther.bxoks.online/api/image${item2["Imagepath"]}",
                                                   width: 80,
                                                   height: 80,
                                                   fit: BoxFit.cover,
@@ -186,7 +186,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
                                           const SizedBox(width: 16),
                                           item2["Imagepath"] != null
                                               ? Image.network(
-                                                  "http://26.65.220.249:3023/api/image${item1["Imagepath"]}",
+                                                  "https://arther.bxoks.online/api/image${item1["Imagepath"]}",
                                                   width: 80,
                                                   height: 80,
                                                   fit: BoxFit.cover,
