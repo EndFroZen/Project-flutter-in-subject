@@ -107,10 +107,16 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  void _logout() {
-    Provider.of<AuthProvider>(context, listen: false).logout();
-    Navigator.of(context).pushReplacementNamed('/login');
-  }
+void _logout() {
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  authProvider.logout(); // ล้าง token
+  Future.delayed(Duration(milliseconds: 500), () {
+    if (authProvider.token == null) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    }
+  });
+}
+
 
   void _showDeleteConfirmationDialog(BuildContext context, var item) {
     showDialog(
