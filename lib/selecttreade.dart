@@ -58,7 +58,7 @@ class SelectItemScreen extends StatelessWidget {
       if (response.statusCode == 200) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => AllItem()),
+          MaterialPageRoute(builder: (context) => const AllItem()),
         );
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
@@ -94,7 +94,7 @@ class SelectItemScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Description: ${item['Discription']}'),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -104,10 +104,10 @@ class SelectItemScreen extends StatelessWidget {
                           item["UserInfoID"].toString());
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AllItem()),
+                        MaterialPageRoute(builder: (context) => const AllItem()),
                       );
                     },
-                    child: Text('Exchange'),
+                    child: const Text('Exchange'),
                   ),
                 ],
               ),
@@ -116,7 +116,7 @@ class SelectItemScreen extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -138,7 +138,7 @@ class SelectItemScreen extends StatelessWidget {
         future: fetchData(context),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.hasError) {
@@ -149,7 +149,7 @@ class SelectItemScreen extends StatelessWidget {
             List<dynamic> items = snapshot.data!;
 
             if (items.isEmpty) {
-              return Center(child: Text('ยังไม่มีรายการไอเท็มให้เลือก'));
+              return const Center(child: Text('ยังไม่มีรายการไอเท็มให้เลือก'));
             }
 
             return ListView.builder(
@@ -172,7 +172,7 @@ class SelectItemScreen extends StatelessWidget {
                       children: [
                         ClipRRect(
                           borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(15)),
+                              const BorderRadius.vertical(top: Radius.circular(15)),
                           child: Image.network(
                             imageUrl,
                             height: 120,
@@ -208,7 +208,7 @@ class SelectItemScreen extends StatelessWidget {
             );
           }
 
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         },
       ),
       bottomNavigationBar: const BottomNavBar(currentIndex: 0),

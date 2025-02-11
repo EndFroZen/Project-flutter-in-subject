@@ -72,6 +72,7 @@ class _MailState extends State<Mail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF8F4E1),
       appBar: AppBar(
         title: const Text('MAIL', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF543310),

@@ -89,7 +89,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
       if (response.statusCode == 200) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => AllItem()),
+          MaterialPageRoute(builder: (context) => const AllItem()),
         );
       } else {
         print("Error: ${response.statusCode} - ${response.body}");
@@ -102,6 +102,7 @@ class _ScreenTradeState extends State<ScreenTrade> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF8F4E1),
       appBar: AppBar(
         title: const Text('TRADE START', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF543310),

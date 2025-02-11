@@ -60,10 +60,10 @@ class ItemDetailScreen extends StatelessWidget {
                       const SizedBox(height: 10),
                       Text('By: ${item.account}', style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic, color: Colors.black54)),
                       const SizedBox(height: 10),
-                      Text('Description:', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+                      const Text('Description:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
                       Text(item.description, style: const TextStyle(fontSize: 16, color: Colors.black87)),
                       const SizedBox(height: 10),
-                      Text('Location:', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+                      const Text('Location:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
                       Text(item.location, style: const TextStyle(fontSize: 16, color: Colors.black87)),
                     ],
                   ),
@@ -88,9 +88,9 @@ class ItemDetailScreen extends StatelessWidget {
                     ),
                     elevation: 4,
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       Icon(Icons.compare_arrows, color: Colors.white, size: 30),
                       SizedBox(width: 10),
                       Text("Trade Item", style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),

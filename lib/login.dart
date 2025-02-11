@@ -343,7 +343,7 @@ void showErrorDialog(BuildContext context, String title, String message) {
         backgroundColor: Colors.white,
         title: Row(
           children: [
-            Icon(Icons.error_outline, color: Colors.red, size: 28),
+            const Icon(Icons.error_outline, color: Colors.red, size: 28),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

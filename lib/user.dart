@@ -25,7 +25,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['ID'],
+      id: json['ID'] ?? 0,
       name: json['Name'] ?? 'Unknown',
       email: json['Email'] ?? 'No Email',
       phone: json['Phone'] ?? 'No Phone Number',
@@ -63,10 +63,10 @@ class _UserProfileState extends State<UserProfile> {
         final String responseBody = utf8.decode(response.bodyBytes);
         var jsonResponse = json.decode(responseBody);
 
-
         setState(() {
           user = User.fromJson(jsonResponse['user']);
-          items = jsonResponse['item'];
+          items = jsonResponse['item'] ?? [];
+
           isLoading = false;
         });
       } else {
@@ -78,6 +78,38 @@ class _UserProfileState extends State<UserProfile> {
       });
       debugPrint("Error fetching user profile: $e");
     }
+  }
+
+  void _confirmLogout() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); 
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _logout(); 
+              },
+              child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _logout() {
+    Provider.of<AuthProvider>(context, listen: false).logout();
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   void _showDeleteConfirmationDialog(BuildContext context, var item) {
@@ -117,9 +149,8 @@ class _UserProfileState extends State<UserProfile> {
 
       if (response.statusCode == 200) {
         setState(() {
-          items.remove(item); // Remove the item from the list after deletion
+          items.remove(item);
         });
-
       } else {
         throw Exception('Failed to delete item');
       }
@@ -131,9 +162,16 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF8F4E1),
       appBar: AppBar(
         title: const Text("User Profile"),
         backgroundColor: const Color(0xFF543310),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: _confirmLogout, 
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -141,50 +179,52 @@ class _UserProfileState extends State<UserProfile> {
             ? const Center(child: CircularProgressIndicator())
             : user == null
                 ? const Center(child: Text("Failed to load user data"))
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: user!.profileImage != null
-                              ? NetworkImage(user!.profileImage!)
-                              : const AssetImage("assets/default_profile.png")
-                                  as ImageProvider,
+                : Column(
+                    children: [
+                      // Profile Image
+                      // CircleAvatar(
+                      //   radius: 50,
+                      //   backgroundImage: user!.profileImage != null
+                      //       ? NetworkImage(user!.profileImage!)
+                      //       : const AssetImage("assets/default_profile.png")
+                      //           as ImageProvider,
+                      // ),
+                      const SizedBox(height: 10),
+                      Text(user!.name,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 32)),
+                      const SizedBox(height: 20),
+
+                      // User Information Card
+                      Card(
+                        elevation: 2,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: const Icon(Icons.person),
+                              title: const Text("Name"),
+                              subtitle: Text(user!.name),
+                            ),
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Icons.phone),
+                              title: const Text("Phone Number"),
+                              subtitle: Text(user!.phone),
+                            ),
+                            const Divider(),
+                            ListTile(
+                              leading: const Icon(Icons.email),
+                              title: const Text("Email"),
+                              subtitle: Text(user!.email),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        const Text("User Profile",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18)),
-                        const SizedBox(height: 20),
-                        Card(
-                          elevation: 2,
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: const Icon(Icons.person),
-                                title: const Text("Name"),
-                                subtitle: Text(user!.name),
-                              ),
-                              const Divider(),
-                              ListTile(
-                                leading: const Icon(Icons.phone),
-                                title: const Text("Phone Number"),
-                                subtitle: Text(user!.phone),
-                              ),
-                              const Divider(),
-                              ListTile(
-                                leading: const Icon(Icons.email),
-                                title: const Text("Email"),
-                                subtitle: Text(user!.email),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // ListView of items
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // Item List
+                      Expanded(
+                        child: ListView.builder(
                           itemCount: items.length,
                           itemBuilder: (context, index) {
                             var item = items[index];
@@ -193,34 +233,48 @@ class _UserProfileState extends State<UserProfile> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.network(
-                                    "https://arther.bxoks.online/api/image${item['Imagepath']}",
-                                    height: 100,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  item['Imagepath'] != null
+                                      ? Image.network(
+                                          "https://arther.bxoks.online/api/image${item['Imagepath']}",
+                                          height: 100,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error,
+                                                  stackTrace) =>
+                                              const Icon(
+                                                  Icons.image_not_supported),
+                                        )
+                                      : const SizedBox(),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      item['Name'],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            item['Name'],
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete,
+                                              color: Colors.red),
+                                          onPressed: () =>
+                                              _showDeleteConfirmationDialog(
+                                                  context, item),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete,
-                                        color: Colors.red),
-                                    onPressed: () =>
-                                        _showDeleteConfirmationDialog(
-                                            context, item),
                                   ),
                                 ],
                               ),
                             );
                           },
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
       ),
       bottomNavigationBar: const BottomNavBar(currentIndex: 2),

@@ -185,14 +185,6 @@ class _AdditemState extends State<Additem> {
                   await postItem(nameController.text, descriptionController.text, locationController.text, base64file);
                 }
               },
-              child: const Text(
-                "POST ITEM",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF543310),
                 shape: RoundedRectangleBorder(
@@ -200,6 +192,14 @@ class _AdditemState extends State<Additem> {
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 elevation: 5,
+              ),
+              child: const Text(
+                "POST ITEM",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ],

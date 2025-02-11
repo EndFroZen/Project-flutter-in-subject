@@ -106,6 +106,7 @@ class _TradeScreenState extends State<TradeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
         backgroundColor: const Color(0xFF543310),
         leading: IconButton(
@@ -233,7 +234,7 @@ class _TradeScreenState extends State<TradeScreen> {
           ),
         ],
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFF8F4E1),
     );
   }
 }
